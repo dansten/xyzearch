@@ -4,7 +4,11 @@ import AuthContext from '../context/AuthContext'
 
 
 function LoginForm() {
-    let {loginUser} = useContext(AuthContext)
+    // let {loginUser} = useContext(AuthContext)
+    let loginUser = (e) => {
+        e.preventDefault()
+        console.log("Login")
+    }
 
     const navigate = useNavigate()
 

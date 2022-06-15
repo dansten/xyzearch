@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from "styled-components";
 
 function Search() {
     const [input, setInput] = useState("")
@@ -8,10 +9,11 @@ function Search() {
     const submitHandler = (e) => {
         e.preventDefault()
         navigate('/search/'+input)
+        
     }
 
     return (
-        <div>
+        <SearchWrapper>
             <form onSubmit={submitHandler}>
                 <input 
                     placeholder={'Search for products'} 
@@ -20,8 +22,20 @@ function Search() {
                     value={input}
                 />
             </form>
-        </div>
+        </SearchWrapper>
     )
 }
 
 export default Search
+
+const SearchWrapper = styled.div`
+    input[type="text"] {
+        padding: 0.25rem 0.5rem;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+        width: 320px;
+        margin: 0 1rem;
+        /* color: #333; */
+    }
+}
+` 

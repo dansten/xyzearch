@@ -1,48 +1,35 @@
-import { useEffect, useState } from 'react';
 import Search from './Search'
-import { useNavigate } from 'react-router-dom'
+import styled from "styled-components";
 
 function Navbar() {
-    const navigate = useNavigate()
-    const [tags, setTags] = useState([])
-    useEffect(() => {
-        getTags();
-    },[])
-
-    // TODO: Implement search function, http://127.0.0.1:8000/api/products/custom/?search=
-    const getTags = async () => {
-        const api = await fetch("http://127.0.0.1:8000/api/tags/");
-        const data = await api.json();
-        setTags(data);
-    };
-
-
     return (
-        <header>
-            <div>
-                <h3 onClick={navigate('/')}>XYZearch</h3>
+        <NavStyle>
+            <div className='navSearch'>
                 <Search />
                 <button>Sign Up</button>
             </div>
-            <div>
-                <ul>
-                    <li>Trending</li>
-                    <div>
-                        <li><span>All Categories</span></li>
-                        {tags.map((tag) => {
-                            return (
-                            <div key={tag.id}>
-                                <li>{tag.name}</li>
-                            </div>
-                            );
-                        })}
-                    </div>
-                    <li>About</li>
-                    <li>Submit</li>
-                </ul>
-            </div>
-        </header>
+        </NavStyle>
     )
 }
 
 export default Navbar
+
+const NavStyle = styled.div`
+  position: sticky;
+  top: 0px;
+  background-color: white;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 1rem 0;
+  display: flex;
+  margin-bottom: 24px;
+  z-index: 40;
+
+  .navSearch {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-flex;
+    max-width: 1012px;
+
+  }
+}
+` 
