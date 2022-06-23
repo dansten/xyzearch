@@ -1,6 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom'
+import { ProductWrapper } from '../components/Products'
+import Product from "../components/Product";
 
 function Searched() {
   const [searchedProducts, setSearchedProducts] = useState([]);
@@ -8,10 +10,9 @@ function Searched() {
 
   const getSearched = async (query) => {
     const api = await fetch(
-      `http://127.0.0.1:8000/api/products/custom?search=${query}`
+      `http://127.0.0.1:8000/api/products/custom/?search=${query}`
     );
     const data = await api.json();
-    console.log(data)
     setSearchedProducts(data);
   };
 
@@ -20,19 +21,15 @@ function Searched() {
   }, [params.q]);
 
   return (
-    <div>
-      <h3>Search results</h3>
-      {searchedProducts.map((product) => {
-        return (
-          <div key={product.id}>
-            <h1>{product.name}</h1>
-            <p>{product.description}</p>
-            <p>{product.likes.length}</p>
-            <small>{product.tags}</small>
-          </div>
-        );
+    <ProductWrapper>
+      <div className="productContainer">
+        {searchedProducts.map((product) => {
+          return (
+            <Product key={product.id} {...product}/>
+          );
       })}
-    </div>
+      </div>
+    </ProductWrapper>
   );
 }
 

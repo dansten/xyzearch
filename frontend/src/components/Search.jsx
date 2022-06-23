@@ -7,6 +7,7 @@ function Search() {
     const navigate = useNavigate()
 
     const submitHandler = (e) => {
+        console.log(e.value)
         e.preventDefault()
         navigate('/search/'+input)
         
@@ -32,10 +33,15 @@ const SearchWrapper = styled.div`
     input[type="text"] {
         padding: 0.25rem 0.5rem;
         border-radius: 10px;
-        border: 1px solid #e6e6e6;
+        border: 1px solid #454760;
         width: 320px;
-        margin: 0 1rem;
-        /* color: #333; */
+        #margin: 0 1rem;
+        height: 1.5rem;
+        margin-right: 340px;
+    }
+
+    input[type="text"]:focus-visible {
+        outline: none;
     }
 }
 ` 

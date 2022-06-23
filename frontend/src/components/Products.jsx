@@ -34,7 +34,7 @@ function Products() {
 
 export default Products
 
-const ProductWrapper = styled.div`
+export const ProductWrapper = styled.div`
   display: flex;
 
   .productContainer {

@@ -5,6 +5,8 @@ from rest_framework import filters, generics
 from .serializers import *
 from base.models import Product, Profile, Tag
 from django.contrib.auth.models import User 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -24,9 +26,12 @@ def getRoutes(request):
     }
     return Response(routes)
 
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 #add permission
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def addProduct(request):
     data = request.data
     user = request.user
@@ -35,10 +40,10 @@ def addProduct(request):
     # )
     product = Product.objects.create(
         owner = user,
-        # name = data['name'],
-        # description = data['description'],
+        name = data['name'],
+        description = data['description'],
         body = data['body'],
-        # website = data['website'],
+        website = data['website'],
         # postDate = postdate
     )
     serializer = ProductSerializer(product, many=False)
@@ -78,8 +83,8 @@ def getProducts(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getProduct(request, pk):
-    products = Product.objects.get(id=pk)
+def getProduct(request, name):
+    products = Product.objects.get(name=name)
     serializer = ProductSerializer(products, many=False)
     return Response(serializer.data)
 
@@ -91,6 +96,13 @@ class ProdcutListView(generics.ListAPIView):
     search_fields = ['name', 'description', 'body', 'website','tags__name']
     #Implement ordering
 
+#Search for product by tag
+class ProductByTagList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+
 @api_view(['POST'])
 def createUser(request):
     data = request.data
@@ -101,7 +113,7 @@ def createUser(request):
         password = data['password']
     )
     serializer = UserSerializer(user, many=False)
-    return Response({'message':'Tag was added!', 'data':serializer.data})
+    return Response({'message':'User was added!', 'data':serializer.data})
 
 # @api_view(['DELETE'])
 # @permission_classes([IsAuthenticated])
@@ -120,8 +132,8 @@ def getUsers(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getUser(request, username):
-    user = Profile.objects.get(user__username=username)
+def getUser(request, pk):
+    user = Profile.objects.get(id=pk)
     serializer = ProfileSerializer(user, many=False)
     return Response(serializer.data)
 
@@ -154,7 +166,7 @@ def getTags(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getTag(request, pk):
-    tags = Tag.objects.get(id=pk) #here we want to order by most products in tag
+def getTag(request, name):
+    tags = Tag.objects.get(name=name) #here we want to order by most products in tag
     serializer = TagSerializer(tags, many=False)
     return Response(serializer.data)

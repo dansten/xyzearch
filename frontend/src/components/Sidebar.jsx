@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import styled from "styled-components";
+import Tag from './Tag';
 
 function Sidebar() {
   const [tags, setTags] = useState([])
+  let { user } = useContext(AuthContext)
 
     // TODO: Implement search function, http://127.0.0.1:8000/api/products/custom/?search=
     const getTags = async () => {
@@ -24,19 +27,19 @@ function Sidebar() {
     <StyledSidebar>
       <h3 onClick={navigateHome}>XYZearch</h3>
       <ul>
-          <li>Trending</li>
+          <li>All Categories</li>
           <div>
-              <li><span>All Categories</span></li>
-              {tags.map((tag) => {
-                  return (
-                  <div key={tag.id}>
-                      <li>{tag.name}</li>
-                  </div>
-                  );
-              })}
+            {tags.map((tag) => {
+                return (
+                  <Tag key={tag.id} {...tag} />
+                );
+            })}
           </div>
-          <li>About</li>
-          <li>Submit</li>
+          {user ? (
+            <li onClick={() => navigate('/submit')}>Submit</li>
+          ) : (
+            <li onClick={() => navigate('/signin')}>Submit</li>
+          )}
       </ul>
     </StyledSidebar>
   )
@@ -51,19 +54,30 @@ const StyledSidebar = styled.div`
   top: 0px;
   position: sticky;
   overflow: hidden;
-  border-right: 1px solid #e6e6e6;
+  border-right: 1px solid #454760;
+  padding: 0 24px 0 12px;
 
   h3 {
     padding: 0 0.5rem;
+    cursor: pointer;
   }
 
   ul {
-    margin: inherit;
     padding: 0 0.5rem;
     list-style-type: none;
 
     li {
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    li:hover {
+      color: #f35b5b;
+    }
+
+    div li {
+      padding-left: 10px;
     }
   }
 ` 
